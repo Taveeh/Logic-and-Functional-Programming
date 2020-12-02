@@ -6,12 +6,12 @@
 
 % getSequences(n, i) = {
 %   [], i = n + 1,
-%   i + getSequences(n, i + 1), i <= n
-%   getSequences(n, i + 1), i <= n
+%   1. i + getSequences(n, i + 1), i <= n
+%   2. getSequences(n, i + 1), i <= n
 % }
 
 % getSequences(N: number, I: number, R: list)
-% getSequences(i, i, o)
+% getSequences(i, i, o) - non deterministic
 
 getSequences(N, I, []) :- I =:= N + 1, !.
 getSequences(N, I, [I|R]) :- 
@@ -83,18 +83,20 @@ allSolutions(N, M, R) :-
 %   isIn(e, l2...ln), otherwise
 % }
 
+% isIn(E: Number, L: List)
+% isIn(i, i)
 isIn(H, [H|T]) :- !.
 isIn(E, [H|T]) :- 
     E =\= H,
     isIn(E, T).
 
-% candidate(n) = {
-%   n
-%   candidate(n - 1), n > 1
-% }
+% candidate(n) = 
+%   1. n
+%   2. candidate(n - 1), n > 1
+% 
 
 % candidate(N: Number, I: Number)
-% candidate(i, o)
+% candidate(i, o) - non deterministic
 
 candidate(N, N).
 candidate(N, I) :-
@@ -104,7 +106,7 @@ candidate(N, I) :-
 
 % permutationAux(n, m, len, l1...ln) = {
 %   l1...ln, len = n
-%   permutationAux(n, m, len + 1, candidate(n) U l1...ln), abs(l1 - candidate(n)) > m, candidate(n) not in l1...ln
+%   permutationAux(n, m, len + 1, candidate(n) U l1...ln), abs(l1 - candidate(n)) >= m, candidate(n) not in l1...ln
 %}
 
 % permutationAux(N: Number, M: Number, Len: Number, L: List, R: List)
@@ -118,7 +120,9 @@ permutationAux(N, M, Len, [H|T], L) :-
     Len1 is Len + 1,
     permutationAux(N, M, Len1, [I|[H|T]], L).
 
-% Generate a permutation of n with that property
+% permutation(n, m) = 
+%   permutationAux(n, m, 1, [candidate(n)])
+% 
 % permutation(N: Number, M: Number, L: List)
 % permutation(i, i, o)
 permutation(N, M, L) :-
@@ -126,6 +130,9 @@ permutation(N, M, L) :-
     permutationAux(N, M, 1, [I], L).
 
 
+% allPermutations(n, m) = U permutation(n, m)
+% allPermutations(N: Number, M: Number, R: List)
+% allPermutations(i, i, o)
 allPermutations(N, M, R) :-
     findall(R2, permutation(N, M, R2), R),
     write(R).
