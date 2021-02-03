@@ -1,14 +1,14 @@
 ;; a) Write a function to eliminate the n-th element of a linear list.
 ;; removeNth(l1...ln, pos) = {
-;;      nil, n = 0
-;;      l2...ln, pos = 0
+;;      [], n = 0
+;;      l2...ln, pos = 1
 ;;      l1 U removeNth(l2...ln, pos - 1), otherwise
 ;; }
 
 (defun removeNth(l pos)
 (cond
     ((null l) nil)
-    ((= pos 1) (CDR l))
+    ((equal pos 1) (CDR l))
     (t (CONS (CAR l) (removeNth (CDR l) (- pos 1))))))
 
 (print (removeNth '(1 2 3 4 5 6 7 8) 5))
@@ -42,7 +42,8 @@
 
 
 ;; successor(l1...ln, c) = {
-;;      nil, n = 0
+;;      [], n = 0, c = 0
+;;      [1], n = 0, c = 1
 ;;      (l1 + c) % 10 U successor(l2...ln, (l1 + c) / 10), otherwise
 ;; }
 
@@ -79,7 +80,7 @@
 ))
 
 ;; contains(l1...ln, elem) = {
-;;      nil, n = 0
+;;      false, n = 0
 ;;      true, l1 = elem
 ;;      contains(l2...ln, elem), otherwise
 ;; }
@@ -87,7 +88,7 @@
 (defun contains(l elem)
 (cond
     ((null l) nil)
-    ((= (car l) elem) T)
+    ((equal (car l) elem) T)
     (T (contains (cdr l) elem))
 ))
 
@@ -103,18 +104,15 @@
 ))
 
 ;; c(l1...ln) = makeSet(uniqueAtomsAcc(l1...ln, []), [])
-(defun c(l)
-(
-    makeSet (uniqueAtomsAcc l '()) '()
-))
+(defun c(l) (makeSet (uniqueAtomsAcc l '()) '()))
 
-(print (c '(1 (2 (1 3 (2 4) 3) 1) (1 4))))
+(print (c '(1 (2 (1 3 (2 A) 3) 1) (1 4))))
 
 ;; d) Write a function to test whether a linear list is a set.
 
 ;; checkSet(l1...ln) = {
 ;;      true, n = 0
-;;      nil, contains(l2...ln, l1)
+;;      false, contains(l2...ln, l1)
 ;;      checkSet(l2...ln), otherwise
 ;; }
 (defun checkSet(l)
